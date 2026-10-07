@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WEB LIBRARY — Akira Ren</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <main id="home" class="page home-page">
+      <div class="cover-shell">
+        <img src="Biblioteca Web de Akira Ren.png" class="cover-image" alt="WEB LIBRARY - Akira Ren">
+        <!-- Transparent interactive zones placed over the exact cover design -->
+        <button class="hotspot nav-home" data-view="home" aria-label="Inicio"></button>
+        <button class="hotspot nav-categories" data-view="categories" aria-label="Categorías"></button>
+        <button class="hotspot nav-favorites" data-view="favorites" aria-label="Favoritos"></button>
+        <button class="hotspot nav-recents" data-view="recents" aria-label="Recientes"></button>
+        <button class="hotspot nav-settings" data-view="settings" aria-label="Configuración"></button>
+        <button class="hotspot search-zone" data-action="focus-search" aria-label="Buscar una página"></button>
+        <button class="hotspot add-zone" data-action="add-link" aria-label="Agregar página"></button>
+        <button class="hotspot quick-fav" data-view="favorites" aria-label="Favoritos"></button>
+        <button class="hotspot quick-recent" data-view="recents" aria-label="Recientes"></button>
+        <button class="hotspot cat-ia" data-filter="IA"></button>
+        <button class="hotspot cat-ent" data-filter="Entretenimiento"></button>
+        <button class="hotspot cat-study" data-filter="Estudio"></button>
+        <button class="hotspot cat-code" data-filter="Programación"></button>
+        <button class="hotspot cat-games" data-filter="Juegos"></button>
+        <button class="hotspot cat-images" data-filter="Imágenes"></button>
+        <button class="hotspot cat-social" data-filter="Redes Sociales"></button>
+        <button class="hotspot cat-music" data-filter="Música"></button>
+        <button class="hotspot cat-other" data-filter="Otros"></button>
+        <button class="hotspot cat-fav" data-view="favorites"></button>
+        <button class="hotspot recent-all" data-view="recents"></button>
+        <button class="hotspot quick-add" data-action="add-link"></button>
+        <button class="hotspot quick-import" data-action="import"></button>
+        <button class="hotspot quick-settings" data-view="settings"></button>
+        <button class="hotspot profile-zone" data-action="open-profile" aria-label="Perfil de Akira Ren"></button>
+      </div>
+    </main>
+
+    <section id="workspace" class="workspace hidden">
+      <header class="workspace-header">
+        <button class="back-home" data-view="home">← Volver a inicio</button>
+        <div>
+          <div class="brand-mini">WEB <span>LIBRARY</span></div>
+          <div class="workspace-title" id="workspaceTitle">Biblioteca</div>
+        </div>
+        <button class="primary-btn" data-action="add-link">＋ Agregar página</button>
+      </header>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <span>⌕</span>
+          <input id="globalSearch" type="search" placeholder="Buscar por título, descripción, plataforma o etiqueta...">
+        </div>
+        <select id="typeFilter">
+          <option value="all">Todo</option>
+          <option value="link">Enlaces</option>
+          <option value="image">Imágenes</option>
+        </select>
+        <select id="platformFilter">
+          <option value="all">Todas las plataformas</option>
+          <option>YouTube</option><option>TikTok</option><option>Instagram</option>
+          <option>Facebook</option><option>Pinterest</option><option>Twitch</option>
+          <option>GitHub</option><option>X</option><option>WhatsApp</option><option>Otros</option>
+        </select>
+      </div>
+
+      <div id="content"></div>
+    </section>
+  </div>
+
+  <!-- Add/Edit link modal -->
+  <div class="modal hidden" id="linkModal">
+    <div class="modal-card">
+      <button class="close" data-action="close-modal">×</button>
+      <h2 id="linkModalTitle">Agregar página</h2>
+      <form id="linkForm">
+        <input type="hidden" id="editId">
+        <label>Título<input id="linkTitle" required placeholder="Ej. Tutorial de JavaScript"></label>
+        <label>Descripción<textarea id="linkDescription" rows="3" placeholder="Describe brevemente este enlace"></textarea></label>
+        <div class="two-col">
+          <label>Plataforma
+            <select id="linkPlatform">
+              <option>YouTube</option><option>TikTok</option><option>Instagram</option>
+              <option>Facebook</option><option>Pinterest</option><option>Twitch</option>
+              <option>GitHub</option><option>X</option><option>WhatsApp</option><option>Otros</option>
+            </select>
+          </label>
+          <label>Categoría
+            <select id="linkCategory">
+              <option>IA</option><option>Entretenimiento</option><option>Estudio</option>
+              <option>Programación</option><option>Juegos</option><option>Imágenes</option>
+              <option>Redes Sociales</option><option>Música</option><option>Otros</option>
+            </select>
+          </label>
+        </div>
+        <label>Enlace<input id="linkUrl" type="url" required placeholder="https://..."></label>
+        <label>Imagen de portada
+  <div class="upload-box">
+    <input id="linkImageFile" type="file" accept="image/*">
+    <div class="upload-help">Selecciona una imagen de tu computador para usarla como portada.</div>
+    <img id="linkImagePreview" class="image-preview hidden" alt="Vista previa de portada">
+  </div>
+</label>
+        <label>Etiquetas<input id="linkTags" placeholder="IA, programación, curso"></label>
+        <label class="check"><input id="linkFavorite" type="checkbox"> Guardar como favorito</label>
+        <button class="primary-btn full" type="submit">Guardar página</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Gallery modal -->
+  <div class="modal hidden" id="imageModal">
+    <div class="modal-card">
+      <button class="close" data-action="close-modal">×</button>
+      <h2>Agregar imagen a la galería</h2>
+      <form id="imageForm">
+        <label>Nombre<input id="imageTitle" required placeholder="Ej. Wallpaper favorito"></label>
+        <label>Descripción<textarea id="imageDescription" rows="3"></textarea></label>
+        <label>Categoría
+          <select id="imageCategory">
+            <option>Personas</option><option>Familia</option><option>Amigos</option>
+            <option>Videojuegos</option><option>Diseño</option><option>Wallpapers</option>
+            <option>IA</option><option>Otros</option>
+          </select>
+        </label>
+        <label>Imagen
+  <div class="upload-box">
+    <input id="imageFile" type="file" accept="image/*" required>
+    <div class="upload-help">Selecciona una imagen desde tu computador.</div>
+    <img id="imagePreview" class="image-preview hidden" alt="Vista previa">
+  </div>
+</label>
+        <button class="primary-btn full" type="submit">Guardar imagen</button>
+      </form>
+    </div>
+  </div>
+
+  <input type="file" id="importFile" accept=".json" hidden>
+
+  <div class="modal hidden" id="profileModal">
+    <div class="character-dossier">
+      <button class="close" data-action="close-modal">×</button>
+      <div class="dossier-hero">
+        <div class="dossier-image-wrap"><img id="profileCharacterImage" src="Akira Ren - Ficha del Personaje.png" alt="Ficha visual de Akira Ren"></div>
+        <div class="dossier-hero-info">
+          <div class="profile-kicker">PERFIL DIGITAL · ARCHIVO DE PERSONAJE</div>
+          <h2 id="profileName">Akira Ren</h2>
+          <p id="profileSubtitle">Guardián Nocturno · Soberano de tu mundo digital 👑</p>
+          <div class="dossier-actions"><button class="primary-btn" data-action="edit-profile">✏️ Editar ficha</button><button class="small-btn" data-action="add-profile-photo">＋ Agregar foto</button></div>
+          <div class="identity-grid" id="profileIdentity"></div>
+        </div>
+      </div>
+
+      <div class="dossier-commandbar">
+        <span>ARCHIVO AKIRA REN</span><span class="dossier-status">● REGISTRO ACTIVO</span>
+      </div>
+
+      <section class="dossier-section intro-section">
+        <div class="dossier-section-title"><span>01</span><div><h3>Identidad y biografía</h3><p id="profileTitleDescription"></p></div></div>
+        <div id="profileBiography" class="dossier-text"></div>
+      </section>
+
+      <section class="dossier-section">
+        <div class="dossier-section-title"><span>02</span><div><h3>Atributos y estadísticas</h3><p>Valores editables del personaje.</p></div></div>
+        <div id="profileStats" class="stat-bars"></div>
+      </section>
+
+      <div class="dossier-two-col">
+        <section class="dossier-section"><div class="dossier-section-title"><span>03</span><div><h3>⚡ Poderes</h3><p>Capacidades extraordinarias.</p></div></div><div id="profilePowers" class="chip-list"></div></section>
+        <section class="dossier-section"><div class="dossier-section-title"><span>04</span><div><h3>◈ Habilidades</h3><p>Técnicas y destrezas.</p></div></div><div id="profileSkills" class="chip-list"></div></section>
+      </div>
+
+      <div class="dossier-two-col">
+        <section class="dossier-section"><div class="dossier-section-title"><span>05</span><div><h3>✦ Características</h3><p>Rasgos y personalidad.</p></div></div><div id="profileCharacteristics" class="chip-list"></div></section>
+        <section class="dossier-section"><div class="dossier-section-title"><span>06</span><div><h3>♜ Equipo</h3><p>Objetos y recursos.</p></div></div><div id="profileEquipment" class="chip-list"></div></section>
+      </div>
+
+      <section class="dossier-section"><div class="dossier-section-title"><span>07</span><div><h3>⌁ Vida, historia y evolución</h3><p>Etapas importantes del personaje.</p></div></div><div id="profileLife" class="timeline-list"></div></section>
+      <section class="dossier-section"><div class="dossier-section-title"><span>08</span><div><h3>🏆 Logros</h3><p>Hitos registrados.</p></div></div><div id="profileAchievements" class="achievement-grid"></div></section>
+      <section class="dossier-section"><div class="dossier-section-title"><span>∞</span><div><h3>Archivo infinito</h3><p>Aquí aparecerán todas las secciones personalizadas que agregues.</p></div></div><div id="profileCustomSections" class="custom-section-list"></div></section>
+
+      <section class="dossier-section"><div class="dossier-section-title"><span>09</span><div><h3>📸 Galería del personaje</h3><p>Cada fotografía puede editarse, reemplazarse o eliminarse.</p></div><button class="small-btn" data-action="add-profile-photo">＋ Foto</button></div><div id="profilePhotos" class="profile-photo-grid"></div></section>
+
+      <section class="dossier-footer"><strong id="profileTitle">Guardián Nocturno</strong><p id="profileLibraryDescription">Perfil digital y archivo personal de Akira Ren.</p><div class="profile-grid"><div class="profile-stat"><b id="profileLinks">0</b><span>Enlaces</span></div><div class="profile-stat"><b id="profileFavorites">0</b><span>Favoritos</span></div><div class="profile-stat"><b id="profileImages">0</b><span>Imágenes</span></div></div></section>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="profileEditModal">
+    <div class="modal-card profile-editor-card">
+      <button class="close" data-action="close-modal">×</button>
+      <h2>✏️ Editor completo de Akira Ren</h2>
+      <p class="editor-note">Puedes modificar la ficha, cambiar la imagen principal y añadir información ilimitada mediante secciones personalizadas.</p>
+      <form id="profileEditForm">
+        <h3>Identidad</h3>
+        <div class="two-col"><label>Nombre<input id="profileEditName" required></label><label>Subtítulo<input id="profileEditSubtitle"></label></div>
+        <div class="two-col"><label>Nivel<input id="profileEditLevel"></label><label>Clase<input id="profileEditClass"></label></div>
+        <div class="two-col"><label>Edad<input id="profileEditAge"></label><label>Especie<input id="profileEditSpecies"></label></div>
+        <label>Alineación<input id="profileEditAlignment"></label>
+        <label>Imagen principal<div class="upload-box"><input id="profileCharacterImageFile" type="file" accept="image/*"><div class="upload-help">Reemplaza la ficha visual del personaje.</div><img id="profileCharacterImagePreview" class="image-preview" alt="Vista previa del personaje"></div></label>
+        <label>Biografía<textarea id="profileEditBiography" rows="7"></textarea></label>
+        <label>Título<input id="profileEditTitle"></label><label>Descripción del título<textarea id="profileEditTitleDescription" rows="3"></textarea></label><label>Descripción de WEB LIBRARY<textarea id="profileEditLibraryDescription" rows="3"></textarea></label>
+        <h3>Estadísticas</h3><div id="profileStatsEditor" class="stats-editor"></div>
+        <h3>Poderes, habilidades y características</h3>
+        <label>Poderes <span class="muted">(uno por línea)</span><textarea id="profileEditPowers" rows="6"></textarea></label>
+        <label>Habilidades <span class="muted">(uno por línea)</span><textarea id="profileEditSkills" rows="6"></textarea></label>
+        <label>Características <span class="muted">(uno por línea)</span><textarea id="profileEditCharacteristics" rows="5"></textarea></label>
+        <label>Vida / historia <span class="muted">(uno por línea)</span><textarea id="profileEditLife" rows="6"></textarea></label>
+        <label>Equipo <span class="muted">(uno por línea)</span><textarea id="profileEditEquipment" rows="5"></textarea></label>
+        <label>Logros <span class="muted">(uno por línea)</span><textarea id="profileEditAchievements" rows="5"></textarea></label>
+        <h3>Archivo infinito</h3>
+        <div id="customSectionsEditor" class="custom-editor-list"></div>
+        <button class="small-btn full" type="button" id="addCustomSectionBtn">＋ Agregar nueva sección</button>
+        <button class="primary-btn full" type="submit">💾 Guardar ficha completa</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal hidden" id="profilePhotoModal">
+    <div class="modal-card">
+      <button class="close" data-action="close-modal">×</button>
+      <h2>📸 Foto de la biografía</h2>
+      <form id="profilePhotoForm">
+        <input type="hidden" id="profilePhotoEditId">
+        <label>Título<input id="profilePhotoTitle" required placeholder="Ej. Akira Ren — Perfil principal"></label>
+        <label>Descripción<textarea id="profilePhotoDescription" rows="3" placeholder="Describe esta foto..."></textarea></label>
+        <label>Foto<div class="upload-box"><input id="profilePhotoFile" type="file" accept="image/*"><div class="upload-help">Selecciona una foto desde tu computador. Al editar puedes reemplazarla.</div><img id="profilePhotoPreview" class="image-preview hidden" alt="Vista previa de la foto"></div></label>
+        <button class="primary-btn full" type="submit">Guardar foto</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
